@@ -4,14 +4,16 @@ KEYWORDS = ['else', 'if', 'int', 'return', 'void', 'while']
 
 
 class token():
-    def __init__(self,nm,class_nm,ind):
+    def __init__(self, nm, class_nm, ind):
         self.name = nm
         self.class_name = class_nm
         self.index = ind
 
+
 def printTable(list):
     for index, item in enumerate(list):
         print(item + ' | ' + str(index))
+
 
 def printTables(keywords, identifiers, numbers, tokens):
     print("Keyword Table:")
