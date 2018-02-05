@@ -2,6 +2,13 @@ import re
 
 KEYWORDS = ['else', 'if', 'int', 'return', 'void', 'while']
 
+
+class token():
+    def __init__(self,nm,class_nm,ind):
+        self.name = nm
+        self.class_name = class_nm
+        self.index = ind
+
 def stripComments(str):
     comment_regex = re.compile(r"/\*.*?\*/")
     results = comment_regex.findall(str)
@@ -44,6 +51,15 @@ def generateSymbolTables(code_str):
         print("token:{}, {} ".format(token_name, token_value))
 
         if token_value in KEYWORDS:
+            if token_value not in keywords:
+                keywords.push(token_value)
+        elif token_name is "identifier":
+            if token_value not in identifiers:
+                identifiers.push(token_value)
+        elif token_name is "integer" or token_name is "float":
+            if token_value not in numbers:
+                numbers.push(token_value)
+
 
 
     if pos != len(code_str):
