@@ -9,6 +9,27 @@ class token():
         self.class_name = class_nm
         self.index = ind
 
+def printTable(list):
+    for index, item in enumerate(list):
+        print(item + ' | ' + str(index))
+
+def printTables(keywords, identifiers, numbers, tokens):
+    print("Keyword Table:")
+    print("-----------------------")
+    printTable(keywords)
+
+    print("Identifiers Table:")
+    print("-----------------------")
+    printTable(identifiers)
+
+    print("Numbers Table:")
+    print("-----------------------")
+    printTable(numbers)
+
+    print("Token Table:")
+    print("-----------------------")
+    printTable(numbers)
+
 def stripComments(str):
     comment_regex = re.compile(r"/\*.*?\*/")
     results = comment_regex.findall(str)
@@ -48,24 +69,23 @@ def generateSymbolTables(code_str):
         token_name = token.lastgroup
         token_value = token.group(token_name)
 
-        print("token:{}, {} ".format(token_name, token_value))
+        #print("token:{}, {} ".format(token_name, token_value))
 
         if token_value in KEYWORDS:
             if token_value not in keywords:
-                keywords.push(token_value)
-        elif token_name is "identifier":
+                keywords.append(token_value)
+        elif token_name is 'identifier':
             if token_value not in identifiers:
-                identifiers.push(token_value)
-        elif token_name is "integer" or token_name is "float":
+                identifiers.append(token_value)
+        elif token_name is 'integer' or token_name is 'float':
             if token_value not in numbers:
-                numbers.push(token_value)
-
-
+                numbers.append(token_value)
 
     if pos != len(code_str):
         raise Exception('tokenizer stopped at pos %r of %r' % (
             pos, len(code_str)))
 
+    printTables(keywords, identifiers, numbers, tokens)
 
 if __name__ == '__main__':
     # user input file
