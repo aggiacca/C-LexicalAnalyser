@@ -1,6 +1,5 @@
 import re
 
-KEYWORDS = ['else', 'if', 'int', 'return', 'void', 'while']
 
 
 class Token:
@@ -51,6 +50,8 @@ def stripComments(str):
 
 def generateSymbolTables(code_str):
 
+    KEYWORDS = ['else', 'if', 'int', 'return', 'void', 'while']
+
     keywords = []
     identifiers = []
     numbers = []
@@ -72,6 +73,7 @@ def generateSymbolTables(code_str):
 
     pos = 0
     while True:
+        # get next token
         token = token_pattern_re.match(code_str, pos)
         if not token:
             break
@@ -79,7 +81,10 @@ def generateSymbolTables(code_str):
         token_name = token.lastgroup
         token_value = token.group(token_name)
 
+        # print for testing
         # print("token:{}, {} ".format(token_name, token_value))
+
+        # add token to tables
         if token_name == 'identifier':
             if token_value in KEYWORDS:
                 if token_value not in keywords:
@@ -98,23 +103,20 @@ def generateSymbolTables(code_str):
         else:
             tokens.append(Token(token_value, token_name, -1))
 
-
-
+    # Error checking
     if pos != len(code_str):
-        raise Exception('tokenizer stopped at pos %r of %r' % (
-            pos, len(code_str)))
+        raise Exception('Token Parser stopped at position {} of {} input code. Please double token at position is in correct format'.format(pos, len(code_str)))
 
+    # print tables
     printTables(keywords, identifiers, numbers, tokens)
 
 if __name__ == '__main__':
     # user input file
     #inputFile = input("Enter File name: ")
     #rawFile = open(inputFile,'r')
-     rawFile = open('loudenCode.txt', 'r')
+    rawFile = open('loudenCode.txt', 'r')
 
     codeWithComments = rawFile.read()
-    # print(codeWithComments)
-
     code_wo_comments = stripComments(codeWithComments)
     print(code_wo_comments)
 
