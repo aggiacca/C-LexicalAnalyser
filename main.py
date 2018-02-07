@@ -112,9 +112,9 @@ def generateSymbolTables(code_str):
 
 if __name__ == '__main__':
     # user input file
-    #inputFile = input("Enter File name: ")
-    #rawFile = open(inputFile,'r')
-    rawFile = open('loudenCode.txt', 'r')
+    inputFile = input("Enter File name: ")
+    rawFile = open(inputFile, 'r')
+    #rawFile = open('loudenCode.txt', 'r')
 
     codeWithComments = rawFile.read()
     code_wo_comments = stripComments(codeWithComments)
