@@ -3,11 +3,17 @@ import re
 KEYWORDS = ['else', 'if', 'int', 'return', 'void', 'while']
 
 
-class token():
+class Token:
     def __init__(self, nm, class_nm, ind):
         self.name = nm
         self.class_name = class_nm
         self.index = ind
+
+
+class Number:
+    def __init__(self, val, num_tp):
+        self.value = val
+        self.num_type = num_tp
 
 
 def printTable(list):
@@ -26,11 +32,13 @@ def printTables(keywords, identifiers, numbers, tokens):
 
     print("Numbers Table:")
     print("-----------------------")
-    printTable(numbers)
+    for index, item in enumerate(numbers):
+        print(item.value + ' | ' + str(index) + ' | ' + item.num_type)
 
     print("Token Table:")
     print("-----------------------")
-    printTable(numbers)
+    for token in tokens:
+        print(token.name + ' | ' + token.class_name + ' | ' + str(token.index))
 
 def stripComments(str):
     comment_regex = re.compile(r"/\*.*?\*/")
@@ -71,17 +79,26 @@ def generateSymbolTables(code_str):
         token_name = token.lastgroup
         token_value = token.group(token_name)
 
-        #print("token:{}, {} ".format(token_name, token_value))
-
-        if token_value in KEYWORDS:
-            if token_value not in keywords:
-                keywords.append(token_value)
-        elif token_name is 'identifier':
-            if token_value not in identifiers:
-                identifiers.append(token_value)
-        elif token_name is 'integer' or token_name is 'float':
+        # print("token:{}, {} ".format(token_name, token_value))
+        if token_name == 'identifier':
+            if token_value in KEYWORDS:
+                if token_value not in keywords:
+                    keywords.append(token_value)
+                    # add to token table as well
+                    tokens.append(Token(token_value, token_name, keywords.index(token_value)))
+            else:
+                if token_value not in identifiers:
+                    identifiers.append(token_value)
+                    tokens.append(Token(token_value, token_name, identifiers.index(token_value)))
+        elif token_name == 'integer' or token_name == 'float':
             if token_value not in numbers:
-                numbers.append(token_value)
+                num = Number(token_value, token_name)
+                numbers.append(num)
+                tokens.append(Token(token_value, token_name, numbers.index(num)))
+        else:
+            tokens.append(Token(token_value, token_name, -1))
+
+
 
     if pos != len(code_str):
         raise Exception('tokenizer stopped at pos %r of %r' % (
@@ -93,11 +110,10 @@ if __name__ == '__main__':
     # user input file
     #inputFile = input("Enter File name: ")
     #rawFile = open(inputFile,'r')
-
-    rawFile = open('loudenCode.txt', 'r')
+     rawFile = open('loudenCode.txt', 'r')
 
     codeWithComments = rawFile.read()
-    print(codeWithComments)
+    # print(codeWithComments)
 
     code_wo_comments = stripComments(codeWithComments)
     print(code_wo_comments)
